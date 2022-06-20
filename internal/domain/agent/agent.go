@@ -1,6 +1,10 @@
-package domain
+package agent
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 //Agent Model that represents the Agent
 type Agent struct {

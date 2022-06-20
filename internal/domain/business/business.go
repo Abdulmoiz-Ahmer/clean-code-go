@@ -1,6 +1,10 @@
-package domain
+package business
 
-import "time"
+import (
+	"github.com/google/uuid"
+	"time"
+)
+
 
 //Business Model that represents the Business
 type Business struct {

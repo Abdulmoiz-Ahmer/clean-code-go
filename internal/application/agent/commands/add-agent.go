@@ -1,25 +1,56 @@
-package application
+package commands
 
-import "time"
+import (
+	"github.com/Abdulmoiz-Ahmer/live-agents-services/internal/domain/agent"
+	"github.com/Abdulmoiz-Ahmer/live-agents-services/internal/pkg/time"
+	"github.com/Abdulmoiz-Ahmer/live-agents-services/internal/pkg/uuid"
+)
 
-//GetAgentRequest Model of the Handler
-type GetAgentRequest struct {
- AgentID uuid.UUID
-}
-
-// GetAgentResult is the return model of Agent Query Handlers
-type GetAgentResult struct {
-  ID        uuid.UUID 
-  FirstName      string    
+//AddAgentRequest Model of CreateAgentRequestHandler
+type AddAgentRequest struct {
+	FirstName      string    
   LastName      string    
   Email      string    
   Password      string    
-  Country   string    
-  CreatedAt time.Time 
-  DeletedAt time.Time 
+  Country   string   
 }
 
-//GetAgentRequestHandler provides an interfaces to handle a GetAgentRequest and return a *GetAgentResult
-type GetAgentRequestHandler interface {
- Handle(query GetAgentRequest) (*GetAgentResult, error)
+//CreateAgentRequestHandler Struct that allows handling AddAgentRequest
+type CreateAgentRequestHandler interface {
+	Handle(command AddAgentRequest) error
 }
+
+type addAgentRequestHandler struct {
+	uuidProvider        uuid.Provider
+	timeProvider        time.Provider
+	repository                agent.Repository
+}
+
+//Handle Handles the AddAgentRequest
+func (handler addAgentRequestHandler) Handle(request AddAgentRequest) error {
+	c := agent.Agent{
+		ID:        handler.uuidProvider.NewUUID(),
+		FirstName:      request.FirstName,
+		LastName:      request.LastName,
+    Email: request.Email,
+		Password:      request.Password,
+		Country:   request.Country,
+
+		CreatedAt: handler.timeProvider.Now(),
+	}
+	error := handler.repository.Add(c);
+
+	if error != nil {
+		return error
+	}
+
+  return c;
+
+	// return handler.notificationService.Notify(n)
+}
+
+//NewAddAgentRequestHandler Initializes an AddCommandHandler
+func NewAddAgentRequestHandler(uuidProvider uuid.Provider, timeProvider time.Provider, repository agent.Repository) CreateAgentRequestHandler {
+	return addAgentRequestHandler{uuidProvider: uuidProvider, timeProvider: timeProvider, repository: repository}
+}
+

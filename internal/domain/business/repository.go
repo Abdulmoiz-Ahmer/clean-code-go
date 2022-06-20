@@ -1,5 +1,5 @@
 // Repository Interface for business
-package domain
+package business
 
 type Repository interface {
   GetByID(id uuid.UUID) (*Business, error)

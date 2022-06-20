@@ -1,5 +1,9 @@
 // Repository Interface for agent
-package domain
+package agent
+
+import (
+	"github.com/google/uuid"
+)
 
 type Repository interface {
   GetByID(id uuid.UUID) (*Agent, error)

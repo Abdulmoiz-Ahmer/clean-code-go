@@ -2,13 +2,13 @@ package commands
 
 import (
 	"github.com/Abdulmoiz-Ahmer/live-agents-services/internal/domain/agent"
-	"github.com/Abdulmoiz-Ahmer/live-agents-services/internal/pkg/time"
-	"github.com/Abdulmoiz-Ahmer/live-agents-services/internal/pkg/uuid"
+	"github.com/Abdulmoiz-Ahmer/live-agents-services/internal/package/time"
+	"github.com/Abdulmoiz-Ahmer/live-agents-services/internal/package/uuid"
 )
 
 //AddAgentRequest Model of CreateAgentRequestHandler
 type AddAgentRequest struct {
-	FirstName      string    
+  FirstName      string    
   LastName      string    
   Email      string    
   Password      string    
@@ -23,28 +23,26 @@ type CreateAgentRequestHandler interface {
 type addAgentRequestHandler struct {
 	uuidProvider        uuid.Provider
 	timeProvider        time.Provider
-	repository                agent.Repository
+	repository          agent.Repository
 }
 
 //Handle Handles the AddAgentRequest
-func (handler addAgentRequestHandler) Handle(request AddAgentRequest) error {
-	c := agent.Agent{
+func (handler addAgentRequestHandler) Handle(request AddAgentRequest) (error) {
+	newAgent := agent.Agent{
 		ID:        handler.uuidProvider.NewUUID(),
 		FirstName:      request.FirstName,
 		LastName:      request.LastName,
-    Email: request.Email,
+    	Email: request.Email,
 		Password:      request.Password,
 		Country:   request.Country,
-
 		CreatedAt: handler.timeProvider.Now(),
 	}
-	error := handler.repository.Add(c);
+	error := handler.repository.Add(newAgent);
 
 	if error != nil {
 		return error
 	}
 
-  return c;
 
 	// return handler.notificationService.Notify(n)
 }

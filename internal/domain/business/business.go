@@ -1,10 +1,10 @@
 package business
 
 import (
-	"github.com/google/uuid"
 	"time"
-)
 
+	"github.com/google/uuid"
+)
 
 //Business Model that represents the Business
 type Business struct {
